@@ -3,12 +3,20 @@ words = ["aardvark", "baboon", "camel"]
 
 word_pick = random.choice(words)
 print(word_pick)
+liczba = len(word_pick)
+placeholder = ""
 
-for word in word_pick:
-    liczba = len(word_pick)
-    print("_ " * liczba)
+
+for tak in range(liczba):
+        placeholder += "- "
+print(placeholder)
+
+display = ""
+
+for letter in word_pick:
     guess = input("Podaj literę: ").lower()
-    if (guess in word_pick):
-        print("True")
+    if (letter == guess):
+        display += guess
     else:
-        print("False")
+        display += "_ "
+    print(display)
