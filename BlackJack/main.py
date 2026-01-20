@@ -1,47 +1,53 @@
 import random
 cards = [11, 2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 10, 10]
 
-def game():
-    player_hand = random.choices(cards, k=2)
-    dealer_hand = random.choices(cards, k=1)
-    score = player_hand[0] + player_hand[1]
-    print(f"Your cards: {player_hand}, current score: {score}")
-    print(f"Dealer first card: {dealer_hand}")
+while True:
+    game = input("Do you want to play blackjack? (y/n): ")
+    if game != "y":
+        break
 
-    def draw(player_hand, dealer_hand, score):
-        new_card = random.choice(cards)
-        player_hand.append(new_card)
-        score += new_card
-        if score > 21:
-            print(f"Your cards: {player_hand}, current score: {score}")
-            print(f"Dealer first card: {dealer_hand}")
-            print("You went over. You lose.")
-            return False
-        elif score <= 21:
-            print(f"Your cards: {player_hand}, current score: {score}")
-            print(f"Dealer first card: {dealer_hand}")
-        return player_hand, dealer_hand, score
-
-    while score <= 21:
-        dec2 = input("Type 'y' to get another card, type 'n' to pass:\n ")
-        if dec2 == "y":
-            player_hand, dealer_hand, score = draw(player_hand, dealer_hand, score)
-        elif dec2 == "n":
-           break
-
-    dealer_hand.extend(random.choices(cards, k=1))
-    dealer_score = dealer_hand[0] + dealer_hand[1]
-    print(f"Your cards: {player_hand}, current score: {score}")
-    print(f"Dealer cards: {dealer_hand}, dealer score: {dealer_score}")
-    if score > dealer_score:
-        print("You win!")
-    else:
-        print("You lose!")
+    card = 0
+    player_cards = random.choices(cards, k=2)
+    card =+ 2
+    dealer_cards = [random.choice(cards)]
+    score_player = player_cards[0] + player_cards[1]
+    score_dealer = dealer_cards[0]
 
 
-dec = input("Do you want to play Blackjack? (y/n): \n")
+    def add_one(score_player, player_cards, card):
+        if score_player < 21:
+            new_card = random.choice(cards)
+            player_cards.append(new_card)
+            score_player += new_card
+            card += 1
+            print(f"Your cards: {player_cards}, current score: {score_player} \n Computer cards: {dealer_cards}")
+        return score_player, player_cards, card
 
-if dec == "y":
-    game()
-else:
-    exit()
+    print(f"Your cards: {player_cards}, current score: {score_player} \n Computer cards: {dealer_cards}")
+    while True:
+        draw = input("Do you want to draw? (y/n): ")
+        if draw == "y":
+            score_player, player_cards, card = add_one(score_player, player_cards, card)
+            if score_player > 21:
+                print("Bust! You lose!")
+                break
+            elif card == 4:
+                break
+        else:
+            break
+
+    if score_player < 21:
+        dealer_cards.append(random.choice(cards))
+        dealer_score = dealer_cards[0] + dealer_cards[1]
+        print(f"Your cards: {player_cards}, current score: {score_player}")
+        print(f"Dealer cards: {dealer_cards}, dealer score: {dealer_score}")
+        if score_player > dealer_score:
+            print("You Win!")
+        elif score_player < dealer_score:
+            print("You Lose!")
+        elif score_player == dealer_score:
+            print("Draw!")
+
+    print()
+
+
