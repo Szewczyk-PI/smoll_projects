@@ -1,53 +1,75 @@
 import random
-cards = [11, 2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 10, 10]
+from art import logo
 
-while True:
-    game = input("Do you want to play blackjack? (y/n): ")
-    if game != "y":
-        break
-
-    card = 0
-    player_cards = random.choices(cards, k=2)
-    card =+ 2
-    dealer_cards = [random.choice(cards)]
-    score_player = player_cards[0] + player_cards[1]
-    score_dealer = dealer_cards[0]
+def deal_card():
+    """ Deal a card randomly """
+    cards = [11, 2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 10, 10]
+    card = random.choice(cards)
+    return card
 
 
-    def add_one(score_player, player_cards, card):
-        if score_player < 21:
-            new_card = random.choice(cards)
-            player_cards.append(new_card)
-            score_player += new_card
-            card += 1
-            print(f"Your cards: {player_cards}, current score: {score_player} \n Computer cards: {dealer_cards}")
-        return score_player, player_cards, card
+def calculate_score(cards):
+    """ Calculate the score of a card """
+    if sum(cards) == 2 and len(cards) == 2:
+        return 0
 
-    print(f"Your cards: {player_cards}, current score: {score_player} \n Computer cards: {dealer_cards}")
-    while True:
-        draw = input("Do you want to draw? (y/n): ")
-        if draw == "y":
-            score_player, player_cards, card = add_one(score_player, player_cards, card)
-            if score_player > 21:
-                print("Bust! You lose!")
-                break
-            elif card == 4:
-                break
+    if 11 in cards and sum(cards) > 21:
+        cards.remove(11)
+        cards.append(1)
+
+    return sum(cards)
+
+
+def compere(u_score, c_score):
+    if u_score == c_score:
+        return "Draw"
+    elif c_score == 0:
+        return "Lose, opponent have a BlackJack"
+    elif u_score == 0:
+        return "Win, BlackJack!"
+    elif u_score > 21:
+        return "Lose, went over"
+    elif c_score > 21:
+        return "Win, Opponent went over"
+    elif u_score > c_score:
+        return "You Win"
+    else:
+        return "You lose"
+
+def play_game():
+    user_cards = []
+    computer_cards = []
+    computer_score = -1
+    user_score = -1
+    is_game_over = False
+
+    for _ in range(2):
+        user_cards.append(deal_card())
+        computer_cards.append(deal_card())
+
+    while not is_game_over:
+        user_score = calculate_score(user_cards)
+        computer_score = calculate_score(computer_cards)
+        print(f"Your Cards {user_cards}, Your score is {user_score}")
+        print(f"Computer First Card {computer_cards[0]}")
+
+        if user_score == 0 or computer_score == 0 or user_score > 21:
+            is_game_over = True
         else:
-            break
+            user_deal = input("Type 'y' to get another card , type 'n' to pass ")
+            if user_deal == 'y':
+                user_cards.append(deal_card())
+            else:
+                is_game_over = True
 
-    if score_player < 21:
-        dealer_cards.append(random.choice(cards))
-        dealer_score = dealer_cards[0] + dealer_cards[1]
-        print(f"Your cards: {player_cards}, current score: {score_player}")
-        print(f"Dealer cards: {dealer_cards}, dealer score: {dealer_score}")
-        if score_player > dealer_score:
-            print("You Win!")
-        elif score_player < dealer_score:
-            print("You Lose!")
-        elif score_player == dealer_score:
-            print("Draw!")
+    while computer_score != 0 and computer_score < 17:
+        computer_cards.append(deal_card())
+        computer_score = calculate_score(computer_cards)
 
-    print()
+    print(f"Your hands: {user_cards}, final score: {user_score}")
+    print(f"Computer hands: {computer_cards}, final score: {computer_score}")
+    print(compere(user_score, computer_score))
 
-
+while input("Do You want to play BlackJack? Type 'y' or 'n' ") == "y":
+    print(logo)
+    play_game()
