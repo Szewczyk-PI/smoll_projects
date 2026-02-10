@@ -15,7 +15,7 @@ is_game = True
 
 print(f"You have {attempts} attempts remaining to guess the number.")
 
-def check_ans(guess):
+def check_ans(guess , number):
     if(guess < number):
         print("Too low.")
     elif(guess > number):
@@ -23,7 +23,7 @@ def check_ans(guess):
 
 while is_game:
     guess = int(input("Make a guess: "))
-    check_ans(guess)
+    check_ans(guess, number)
     attempts = attempts - 1
     if (attempts == 0):
         print("You've run out of guesses")
